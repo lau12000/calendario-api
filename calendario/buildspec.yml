@@ -1,0 +1,31 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Iniciando login en Amazon ECR...
+      - aws --version
+      - ACCOUNT_ID=167403241052
+      - REGION=us-east-1
+      - REPOSITORY_URI=$ACCOUNT_ID.dkr.ecr.$REGION.amazonaws.com/calendario-api
+      - aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $REPOSITORY_URI
+      - cd calendario
+
+  build:
+    commands:
+      - echo Compilando aplicación Spring Boot...
+      - chmod +x mvnw
+      - ./mvnw clean package
+      - echo Construyendo imagen Docker...
+      - docker build -t calendario-api .
+      - docker tag calendario-api $REPOSITORY_URI:latest
+
+  post_build:
+    commands:
+      - echo Subiendo imagen Docker...
+      - docker push $REPOSITORY_URI:latest
+      - printf '[{"name":"calendario-container","imageUri":"%s"}]' $REPOSITORY_URI:latest > imagedefinitions.json
+
+artifacts:
+  files:
+    - calendario/imagedefinitions.json
