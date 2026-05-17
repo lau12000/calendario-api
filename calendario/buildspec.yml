@@ -1,0 +1,24 @@
+version: 0.2
+
+phases:
+  pre_build:
+    commands:
+      - echo Iniciando build
+      - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 167403241052.dkr.ecr.us-east-1.amazonaws.com
+      - REPOSITORY_URI=167403241052.dkr.ecr.us-east-1.amazonaws.com/calendario-api
+      - IMAGE_TAG=latest
+
+  build:
+    commands:
+      - echo Construyendo imagen Docker
+      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+
+  post_build:
+    commands:
+      - echo Subiendo imagen a ECR
+      - docker push $REPOSITORY_URI:$IMAGE_TAG
+      - printf '[{"name":"calendario-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
+
+artifacts:
+  files:
+    - imagedefinitions.json
