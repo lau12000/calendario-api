@@ -4,12 +4,16 @@ phases:
   pre_build:
     commands:
       - echo Iniciando build
+      - cd calendario
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 167403241052.dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=167403241052.dkr.ecr.us-east-1.amazonaws.com/calendario-api
       - IMAGE_TAG=latest
 
   build:
     commands:
+      - echo Compilando aplicación
+      - chmod +x mvnw
+      - ./mvnw clean package
       - echo Construyendo imagen Docker
       - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
 
@@ -21,4 +25,4 @@ phases:
 
 artifacts:
   files:
-    - imagedefinitions.json
+    - calendario/imagedefinitions.json
