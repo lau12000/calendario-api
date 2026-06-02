@@ -4,7 +4,6 @@ phases:
   pre_build:
     commands:
       - echo Iniciando build
-      - cd calendario
       - aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 167403241052.dkr.ecr.us-east-1.amazonaws.com
       - REPOSITORY_URI=167403241052.dkr.ecr.us-east-1.amazonaws.com/calendario-api
       - IMAGE_TAG=latest
@@ -15,7 +14,7 @@ phases:
       - chmod +x mvnw
       - ./mvnw clean package
       - echo Construyendo imagen Docker
-      - docker build -t $REPOSITORY_URI:$IMAGE_TAG .
+      - docker build --platform linux/amd64 -t $REPOSITORY_URI:$IMAGE_TAG .
 
   post_build:
     commands:
@@ -23,6 +22,6 @@ phases:
       - docker push $REPOSITORY_URI:$IMAGE_TAG
       - printf '[{"name":"calendario-container","imageUri":"%s"}]' $REPOSITORY_URI:$IMAGE_TAG > imagedefinitions.json
 
-artifacts:
-  files:
-    - calendario/imagedefinitions.json
+  artifacts:
+    files:
+      - imagedefinitions.json

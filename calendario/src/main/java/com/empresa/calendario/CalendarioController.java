@@ -1,7 +1,7 @@
 package com.empresa.calendario;
 
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 public class CalendarioController {
@@ -11,4 +11,8 @@ public class CalendarioController {
         return "API funcionando";
     }
 
+    @GetMapping("/calendario")
+    public String obtenerCalendario() {
+        return "API de calendarios laborales funcionando";
+    }
 }
