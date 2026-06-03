@@ -8,7 +8,7 @@ public class CalendarioController {
 
     @GetMapping("/")
     public String inicio() {
-        return "API funcionando";
+        return "NUEVA VERSION";
     }
 
     @GetMapping("/calendario")
