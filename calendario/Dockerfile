@@ -1,5 +1,12 @@
 FROM public.ecr.aws/amazoncorretto/amazoncorretto:17
+
 WORKDIR /app
-COPY target/calendario-0.0.1-SNAPSHOT.jar app.jar
+
+COPY . .
+
+RUN chmod +x mvnw
+RUN ./mvnw clean package -DskipTests
+
 EXPOSE 8080
-ENTRYPOINT ["java","-jar","app.jar"]
+
+CMD ["java", "-jar", "target/calendario-api-0.0.1-SNAPSHOT.jar"]
