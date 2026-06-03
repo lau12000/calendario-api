@@ -1,9 +1,10 @@
-FROM maven:3.9.6-eclipse-temurin-17
+FROM public.ecr.aws/amazoncorretto/amazoncorretto:17
 
 WORKDIR /app
 
 COPY . .
 
+RUN yum install -y tar gzip
 RUN chmod +x mvnw
 RUN ./mvnw clean package -DskipTests
 
